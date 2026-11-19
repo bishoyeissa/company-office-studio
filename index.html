@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مكتب الشركة</title>
+<link rel="stylesheet" href="office.css">
+<header><div class="brand"><span class="mark" aria-hidden="true">◈</span> مكتب الشركة</div><div class="local"><i></i> <span id="storage-mode">مساحة محلية</span></div></header>
+<main>
+  <section class="intro"><div><h1>المكتب الافتراضي</h1><p>استكشف مساحات المكتب وافتح ملف أي موظف من طابق العمل.</p></div><div class="summary"><b id="done">٠ / ١٤</b><span>ملفات مكتملة</span></div></section>
+  <div class="layout">
+    <aside><div class="bar"><h2>فريق الشركة</h2><span class="count">١٤</span></div>
+    <input id="search" type="search" aria-label="ابحث عن موظف" placeholder="ابحث عن موظف أو اختصاص">
+    <div id="list"></div></aside>
+    <article><div class="bar scene-title"><h2><span id="view-title">داخل المكتب</span></h2><div class="tabs" role="group" aria-label="زاوية العرض"><button id="interior-tab" aria-pressed="true">الداخل</button><button id="iso" aria-pressed="false">طابق العمل</button><button id="top" aria-pressed="false">المخطط</button></div></div>
+    <div id="stage" class="interior-mode"><div id="interior-view"><img src="assets/interior.webp" alt="منظور داخلي للمكتب فيه مكاتب الفريق وغرفة اجتماعات زجاجية واستراحة"><button class="room-link team-link" data-room="team">مساحة الفريق</button><button class="room-link meeting-link" data-room="meeting">غرفة الاجتماعات</button><button class="room-link lounge-link" data-room="lounge">الاستراحة</button></div><div id="drawing" aria-label="خريطة مكتب تفاعلية"></div><div id="pins"></div><div class="controls"><button id="larger" aria-label="تكبير">+</button><button id="smaller" aria-label="تصغير">−</button><button id="rotate" aria-label="تدوير المشهد" title="تدوير المشهد">⟳</button><button id="reset" aria-label="إعادة ضبط العرض" title="إعادة ضبط العرض">↺</button></div></div>
+    <footer><span><i></i> مساحة الفريق</span><span><i></i> غرفة الاجتماعات</span><span><i></i> الاستراحة</span></footer></article>
+  </div>
+  <p id="status" role="status"></p>
+</main>
+<dialog id="card"><form id="form"><div class="bar"><span id="seat"></span><button type="button" id="close" aria-label="إغلاق">×</button></div><h2 id="heading">ملف الموظف</h2>
+<label for="empname">اسم الموظف</label><input id="empname" maxlength="64" autocomplete="off" placeholder="اكتب الاسم">
+<label for="role">الاختصاص</label><input id="role" maxlength="100" placeholder="مثلاً تحليل الإعلانات">
+<label for="duties">المسؤوليات</label><textarea id="duties" maxlength="2000" rows="4" placeholder="إيه الشغل اللي هيتسلّم للموظف ده؟"></textarea>
+<div id="feedback" role="status"></div><button type="submit" id="save">حفظ الملف</button></form></dialog>
+<script src="assets/three.min.js"></script><script src="scene.js"></script><script src="office.js"></script>
+</html>

@@ -1,0 +1,69 @@
+const $=id=>document.getElementById(id);
+const number=new Intl.NumberFormat('ar-EG');
+const localOffice=location.hostname==='127.0.0.1' && location.port==='4247';
+const storageKey='company-office/v1/'+new URL('.',location.href).pathname;
+function browserRoster(){
+  const raw=localStorage.getItem(storageKey);
+  if(!raw)return emptyRoster();
+  const records=JSON.parse(raw);
+  if(!Array.isArray(records)||records.length!==14||records.some((e,i)=>e.id!==i+1||['name','role','duties'].some(k=>typeof e[k]!=='string')))throw Error('Invalid roster');
+  return records;
+}
+if(!localOffice)$('storage-mode').textContent='الحفظ في متصفحك';
+let employees=[],editing=null,original=null;
+const title=e=>e.name || 'موظف '+number.format(e.id);
+const emptyRoster=()=>Array.from({length:14},(_,i)=>({id:i+1,name:'',role:'',duties:''}));
+function render(){
+  const query=$('search').value.trim().toLocaleLowerCase();
+  $('list').replaceChildren();
+  for(const e of employees){
+    const name=title(e);OfficeScene.label(e.id-1,name);
+    if(![name,e.role,String(e.id),number.format(e.id)].join(' ').toLocaleLowerCase().includes(query))continue;
+    const b=document.createElement('button');b.className='staff';b.onclick=()=>openEmployee(e.id-1);
+    const badge=document.createElement('span');badge.className='badge';badge.textContent=number.format(e.id);
+    badge.style.setProperty('--tint',['#e1eee4','#f1e7d9','#e2e9ef','#efe3df'][e.id%4]);
+    const text=document.createElement('span'),strong=document.createElement('strong'),small=document.createElement('small');
+    strong.textContent=name;small.textContent=e.role || 'الاختصاص مفتوح';text.append(strong,small);
+    const arrow=document.createElement('span');arrow.className='open';arrow.textContent='‹';arrow.setAttribute('aria-hidden','true');
+    b.append(badge,text,arrow);$('list').append(b);
+  }
+  if(!$('list').childElementCount){const p=document.createElement('p');p.className='empty';p.textContent='مفيش موظف مطابق للبحث.';$('list').append(p)}
+  $('done').textContent=number.format(employees.filter(e=>e.name && e.role).length)+' / ١٤';
+}
+function openEmployee(i){
+  const e=employees[i];if(!e)return;editing=i;original={...e};
+  $('seat').textContent='مقعد '+number.format(e.id);$('heading').textContent=title(e);
+  $('empname').value=e.name;$('role').value=e.role;$('duties').value=e.duties;$('feedback').textContent='';
+  $('card').showModal();
+}
+async function loadRoster(){
+  if(!localOffice){employees=browserRoster();render();return}
+  const res=await fetch('/api/employees',{cache:'no-store'});if(!res.ok)throw Error();
+  employees=await res.json();render();
+}
+$('form').onsubmit=async event=>{
+  event.preventDefault();if(editing===null)return;
+  const next={name:$('empname').value.trim(),role:$('role').value.trim(),duties:$('duties').value.trim()};
+  $('save').disabled=true;
+  try{
+    if(!localOffice){
+      const records=browserRoster();
+      if(JSON.stringify(records[editing])!==JSON.stringify(original)){employees=records;render();$('feedback').textContent='اتعدل الملف في نافذة تانية. افتحه من جديد.';return}
+      records[editing]={...original,...next};
+      localStorage.setItem(storageKey,JSON.stringify(records));employees=records;
+    }else{
+    const response=await fetch('/api/employees/'+original.id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({original,values:next})});
+    if(response.status===409){await loadRoster();$('feedback').textContent='الملف اتعدل في نافذة تانية. اقفل الملف وافتحه لمراجعة آخر نسخة.';return}
+    if(!response.ok)throw Error();
+    employees=await response.json();
+    }
+    render();$('card').close();$('status').textContent='تم حفظ ملف '+title(employees[editing])+' على الجهاز.';
+  }catch(e){$('feedback').textContent='تعذّر حفظ الملف. راجع اتصال المكتب أو إعدادات التخزين في متصفحك.'}
+  finally{$('save').disabled=false}
+};
+$('search').oninput=render;$('close').onclick=()=>$('card').close();
+$('card').setAttribute('aria-labelledby','heading');
+OfficeScene.init(openEmployee);employees=emptyRoster();render();
+loadRoster().catch(()=>{$('status').textContent='تعذّرت قراءة ملفات الفريق. أعد فتح المكتب أو تحقق من إعدادات التخزين.'});
+
+window.addEventListener('storage',event=>{if(!localOffice && event.key===storageKey)loadRoster().catch(()=>{$('status').textContent='تعذّر تحديث قائمة الفريق.'})});
