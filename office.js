@@ -45,6 +45,7 @@ function render(){
 }
 function openEmployee(i){
   const e=employees[i];if(!e)return;editing=i;original={...e};
+  $('profile-task').hidden=i!==0;
   $('seat').textContent='Desk '+number.format(e.id);$('heading').textContent=title(e);
   $('empname').value=e.name;$('role').value=e.role;$('duties').value=e.duties;$('feedback').textContent='';
   $('card').showModal();
@@ -107,8 +108,80 @@ fullScreenButton.addEventListener('click',async()=>{
 });
 document.addEventListener('fullscreenchange',updateFullScreen);
 document.addEventListener('keydown',event=>{
-  if(event.key==='Escape' && officePanel.classList.contains('viewport-mode') && !$('card').open){
+  if(event.key==='Escape' && officePanel.classList.contains('viewport-mode') && !officePanel.querySelector('dialog[open]')){
     setViewportMode(false);
     fullScreenButton.focus({preventScroll:true});
   }
+});
+
+const inbox=$('task-inbox');
+const taskPrefix='office-studio/manager-inbox/'+rosterPath+'/';
+let submission=null;
+let historyVersion=0;
+function browserTasks(){
+  return Object.keys(localStorage).filter(key=>key.startsWith(taskPrefix))
+    .map(key=>JSON.parse(localStorage.getItem(key))).sort((a,b)=>b.created.localeCompare(a.created));
+}
+async function refreshTasks(){
+  const version=++historyVersion;
+  let tasks;
+  if(localOffice){
+    const response=await fetch('/api/tasks',{cache:'no-store'});
+    if(!response.ok)throw Error('Inbox unavailable');
+    tasks=await response.json();
+  }else tasks=browserTasks();
+  if(version!==historyVersion)return;
+  $('task-history').replaceChildren();
+  for(const task of tasks){
+    const item=document.createElement('li');
+    const brief=document.createElement('p');brief.dir='auto';brief.textContent=task.brief;
+    const time=document.createElement('small');
+    time.textContent='Submitted · '+new Date(task.created).toLocaleString('en-US');
+    const copy=document.createElement('button');copy.type='button';copy.textContent='Copy for Codex';
+    copy.onclick=async()=>{
+      try{
+        await navigator.clipboard.writeText('Rami, please handle this task:\n\n'+task.brief);
+        $('task-message').textContent='Copied. Paste the task into your Codex chat to start work.';
+      }catch{
+        const range=document.createRange();range.selectNodeContents(brief);
+        const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);
+        $('task-message').textContent='The brief is selected. Use Copy on your device.';
+      }
+    };
+    item.append(brief,time,copy);$('task-history').append(item);
+  }
+  if(!tasks.length)$('task-history').textContent='No tasks yet.';
+}
+async function openInbox(){
+  if($('card').open)$('card').close();
+  $('task-message').textContent='';
+  inbox.showModal();
+  $('task-brief').focus();
+  try{await refreshTasks()}catch{$('task-message').textContent='Unable to load the task history.'}
+}
+if(localOffice)$('task-storage').textContent='Tasks are saved in the office inbox on this computer. Ask Codex to pick up a submitted task to start work.';
+$('task-open').onclick=$('profile-task').onclick=openInbox;
+$('inbox-close').onclick=()=>inbox.close();
+$('task-brief').oninput=()=>{submission=null;$('task-brief').setCustomValidity('')};
+$('task-form').onsubmit=async event=>{
+  event.preventDefault();
+  if($('send-task').disabled)return;
+  const field=$('task-brief'),brief=field.value.trim();
+  if(!brief){field.setCustomValidity('Enter a task brief.');field.reportValidity();return}
+  $('send-task').disabled=true;field.readOnly=true;
+  try{
+    submission??={id:crypto.randomUUID(),brief,created:new Date().toISOString()};
+    if(localOffice){
+      const response=await fetch('/api/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(submission)});
+      if(!response.ok)throw Error('Submission failed');
+    }else localStorage.setItem(taskPrefix+submission.id,JSON.stringify(submission));
+    submission=null;field.value='';
+    $('task-message').textContent='Task added to Rami’s inbox.';
+    try{await refreshTasks()}catch{$('task-message').textContent='Task saved. Reopen the inbox to refresh the history.'}
+  }catch{$('task-message').textContent='Could not confirm submission. Your brief is still here. Try again.'}
+  finally{$('send-task').disabled=false;field.readOnly=false}
+};
+window.addEventListener('storage',event=>{
+  if(inbox.open && !localOffice && (!event.key || event.key.startsWith(taskPrefix)))
+    refreshTasks().catch(()=>{$('task-message').textContent='Unable to refresh history.'});
 });

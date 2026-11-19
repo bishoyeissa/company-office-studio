@@ -61,3 +61,10 @@ footer{background:#fcfbf7;border-top:1px solid var(--line)}.staff{padding:10px 2
 #office-panel.expanded>.bar,#office-panel.expanded>.activity-bar,#office-panel.expanded>.navigation-help,#office-panel.expanded>footer{flex-shrink:0}
 #office-panel.viewport-mode{position:fixed;inset:0;z-index:1000;height:100vh;height:100dvh}
 html.office-expanded{overflow:hidden}
+#task-open{position:absolute;z-index:4;top:10px;left:10px;border-radius:6px;padding:7px 11px;background:#f6e5bd;color:#263637;font-size:13px;font-weight:650;box-shadow:0 1px 6px #0003}
+#task-inbox{max-height:85vh;overflow:auto}#task-inbox h2{margin:0}#task-inbox h3{font-size:16px;margin:18px 0 6px}#inbox-close{font-size:26px}
+#send-task,#profile-task{margin-top:10px;padding:7px 12px;background:#263c3a;color:white;border-radius:6px}
+#task-message,.inbox-note,#task-history small{font-size:13px;color:#495f59}#task-message{margin:8px 0}
+#task-history{list-style:none;padding:0;margin:0;max-height:28vh;overflow:auto}
+#task-history li{padding:7px 0;border-bottom:1px solid #deddd2}#task-history p{white-space:pre-wrap;overflow-wrap:anywhere}
+#task-history button{display:block;text-decoration:underline;padding:3px 0;font-size:13px}.inbox-note{margin-top:12px}
