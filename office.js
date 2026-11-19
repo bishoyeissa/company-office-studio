@@ -116,6 +116,7 @@ document.addEventListener('keydown',event=>{
 
 const inbox=$('task-inbox');
 const taskPrefix='office-studio/manager-inbox/'+rosterPath+'/';
+let useOfficeInbox=localOffice;
 let submission=null;
 let historyVersion=0;
 function browserTasks(){
@@ -125,10 +126,16 @@ function browserTasks(){
 async function refreshTasks(){
   const version=++historyVersion;
   let tasks;
-  if(localOffice){
+  if(useOfficeInbox){
     const response=await fetch('/api/tasks',{cache:'no-store'});
-    if(!response.ok)throw Error('Inbox unavailable');
-    tasks=await response.json();
+    if(response.status===404){
+      useOfficeInbox=false;
+      $('task-storage').textContent='Tasks are saved in this browser. Copy a task to Codex to start work.';
+      tasks=browserTasks();
+    }else{
+      if(!response.ok)throw Error('Inbox unavailable');
+      tasks=[...await response.json(),...browserTasks()].sort((a,b)=>b.created.localeCompare(a.created));
+    }
   }else tasks=browserTasks();
   if(version!==historyVersion)return;
   $('task-history').replaceChildren();
@@ -171,7 +178,7 @@ $('task-form').onsubmit=async event=>{
   $('send-task').disabled=true;field.readOnly=true;
   try{
     submission??={id:crypto.randomUUID(),brief,created:new Date().toISOString()};
-    if(localOffice){
+    if(useOfficeInbox){
       const response=await fetch('/api/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(submission)});
       if(!response.ok)throw Error('Submission failed');
     }else localStorage.setItem(taskPrefix+submission.id,JSON.stringify(submission));
@@ -182,6 +189,6 @@ $('task-form').onsubmit=async event=>{
   finally{$('send-task').disabled=false;field.readOnly=false}
 };
 window.addEventListener('storage',event=>{
-  if(inbox.open && !localOffice && (!event.key || event.key.startsWith(taskPrefix)))
+  if(inbox.open && !useOfficeInbox && (!event.key || event.key.startsWith(taskPrefix)))
     refreshTasks().catch(()=>{$('task-message').textContent='Unable to refresh history.'});
 });
