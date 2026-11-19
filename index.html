@@ -1,25 +1,25 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>مكتب الشركة</title>
-<link rel="stylesheet" href="office.css">
-<header><div class="brand"><span class="mark" aria-hidden="true">◈</span> مكتب الشركة</div><div class="local"><i></i> <span id="storage-mode">مساحة محلية</span></div></header>
+<html lang="en" dir="ltr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Office Studio | Team workspace</title><link rel="stylesheet" href="office.css?v=3"></head>
+<body>
+<header><div class="brand"><span class="mark" aria-hidden="true">◈</span> Office Studio</div><div class="local"><i></i><span id="storage-mode">Local workspace</span></div></header>
 <main>
-  <section class="intro"><div><h1>المكتب الافتراضي</h1><p>استكشف مساحات المكتب وافتح ملف أي موظف من طابق العمل.</p></div><div class="summary"><b id="done">٠ / ١٤</b><span>ملفات مكتملة</span></div></section>
-  <div class="layout">
-    <aside><div class="bar"><h2>فريق الشركة</h2><span class="count">١٤</span></div>
-    <input id="search" type="search" aria-label="ابحث عن موظف" placeholder="ابحث عن موظف أو اختصاص">
-    <div id="list"></div></aside>
-    <article><div class="bar scene-title"><h2><span id="view-title">داخل المكتب</span></h2><div class="tabs" role="group" aria-label="زاوية العرض"><button id="interior-tab" aria-pressed="true">الداخل</button><button id="iso" aria-pressed="false">طابق العمل</button><button id="top" aria-pressed="false">المخطط</button></div></div>
-    <div id="stage" class="interior-mode"><div id="interior-view"><img src="assets/interior.webp" alt="منظور داخلي للمكتب فيه مكاتب الفريق وغرفة اجتماعات زجاجية واستراحة"><button class="room-link team-link" data-room="team">مساحة الفريق</button><button class="room-link meeting-link" data-room="meeting">غرفة الاجتماعات</button><button class="room-link lounge-link" data-room="lounge">الاستراحة</button></div><div id="drawing" aria-label="خريطة مكتب تفاعلية"></div><div id="pins"></div><div class="controls"><button id="larger" aria-label="تكبير">+</button><button id="smaller" aria-label="تصغير">−</button><button id="rotate" aria-label="تدوير المشهد" title="تدوير المشهد">⟳</button><button id="reset" aria-label="إعادة ضبط العرض" title="إعادة ضبط العرض">↺</button></div></div>
-    <footer><span><i></i> مساحة الفريق</span><span><i></i> غرفة الاجتماعات</span><span><i></i> الاستراحة</span></footer></article>
-  </div>
-  <p id="status" role="status"></p>
-</main>
-<dialog id="card"><form id="form"><div class="bar"><span id="seat"></span><button type="button" id="close" aria-label="إغلاق">×</button></div><h2 id="heading">ملف الموظف</h2>
-<label for="empname">اسم الموظف</label><input id="empname" maxlength="64" autocomplete="off" placeholder="اكتب الاسم">
-<label for="role">الاختصاص</label><input id="role" maxlength="100" placeholder="مثلاً تحليل الإعلانات">
-<label for="duties">المسؤوليات</label><textarea id="duties" maxlength="2000" rows="4" placeholder="إيه الشغل اللي هيتسلّم للموظف ده؟"></textarea>
-<div id="feedback" role="status"></div><button type="submit" id="save">حفظ الملف</button></form></dialog>
-<script src="assets/three.min.js"></script><script src="scene.js"></script><script src="office.js"></script>
-</html>
+<section class="intro"><div><h1>Team workspace</h1><p>Visit a desk to meet its employee and edit their role.</p></div><div class="summary"><b id="done">0 / 14</b><span>Profiles assigned</span></div></section>
+<div class="layout"><aside><div class="bar"><h2>Team directory</h2><span class="count">14</span></div>
+<input id="search" type="search" aria-label="Search team directory" placeholder="Search by name or role"><div id="list"></div></aside>
+<article><div class="bar scene-title"><h2 id="view-title">Desk view</h2><div class="tabs" role="group" aria-label="Office views"><button id="desk-tab" aria-pressed="true">Desk</button><button id="iso" aria-pressed="false">Floor</button><button id="top" aria-pressed="false">Plan</button><button id="interior-tab" aria-pressed="false">Interior</button></div></div>
+<div id="stage" class="desk-mode">
+<div id="interior-view"><img src="assets/interior.webp" alt="Sunlit studio with workstations, a glass meeting room and a lounge"><button class="room-link team-link" data-room="team">Team floor</button><button class="room-link meeting-link" data-room="meeting">Meeting room</button><button class="room-link lounge-link" data-room="lounge">Lounge</button></div>
+<div id="drawing" aria-label="Interactive 3D office"></div><div id="pins"></div>
+<div id="portrait-scene"><img id="standin" alt=""></div>
+<div id="desk-info"><div id="desk-number"></div><strong id="desk-name"></strong><span id="desk-role"></span><button id="desk-profile">Open profile &#8599;</button></div>
+<div class="desk-nav"><button id="previous" aria-label="Previous employee">&#8592;</button><span id="desk-count"></span><button id="next" aria-label="Next employee">&#8594;</button></div>
+<div class="controls"><button id="larger" aria-label="Zoom in">+</button><button id="smaller" aria-label="Zoom out">−</button><button id="rotate" aria-label="Rotate floor" title="Rotate floor">⟳</button><button id="reset" aria-label="Reset view" title="Reset view">↺</button></div></div>
+<footer><span><i></i> Team floor</span><span><i></i> Meeting room</span><span><i></i> Lounge</span></footer></article></div><p id="status" role="status"></p></main>
+<dialog id="card"><form id="form"><div class="bar"><span id="seat"></span><button type="button" id="close" aria-label="Close profile">×</button></div><h2 id="heading">Employee profile</h2>
+<label for="empname">Employee name</label><input id="empname" maxlength="64" autocomplete="off" placeholder="Enter a name">
+<label for="role">Job title</label><input id="role" maxlength="100" list="job-titles" placeholder="e.g. Product Manager"><datalist id="job-titles"><option>General Manager</option><option>Product Manager</option><option>Copywriter</option><option>Video Editor</option><option>Graphic Designer</option><option>Research Analyst</option><option>Marketing Manager</option></datalist>
+<label for="duties">Responsibilities</label><textarea id="duties" maxlength="2000" rows="4" placeholder="What work will this employee own?"></textarea>
+<div id="feedback" role="status"></div><button type="submit" id="save">Save profile</button></form></dialog>
+<script src="assets/three.min.js"></script><script src="scene.js?v=3"></script><script src="office.js?v=3"></script></body></html>
