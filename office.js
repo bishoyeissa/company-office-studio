@@ -35,6 +35,8 @@ function render(){
     badge.style.setProperty('--tint',['#e1eee4','#f1e7d9','#e2e9ef','#efe3df'][e.id%4]);
     const text=document.createElement('span'),strong=document.createElement('strong'),small=document.createElement('small');
     strong.textContent=name;small.textContent=e.role || 'Role unassigned';text.append(strong,small);
+    const activity=document.createElement('small');activity.className='staff-activity';activity.id='staff-activity-'+(e.id-1);
+    activity.textContent=OfficeScene.activity(e.id-1);text.append(activity);
     const arrow=document.createElement('span');arrow.className='open';arrow.textContent='›';arrow.setAttribute('aria-hidden','true');
     b.append(badge,text,arrow);$('list').append(b);
   }

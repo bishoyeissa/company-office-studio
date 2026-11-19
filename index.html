@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Office Studio | Team workspace</title><link rel="stylesheet" href="office.css?v=6"></head>
+<title>Office Studio | Team workspace</title><link rel="stylesheet" href="office.css?v=7"></head>
 <body>
 <header><div class="brand"><span class="mark" aria-hidden="true">◈</span> Office Studio</div><div class="local"><i></i><span id="storage-mode">Local workspace</span></div></header>
 <main>
@@ -16,6 +16,7 @@
 <div id="desk-info"><div id="desk-number"></div><strong id="desk-name"></strong><span id="desk-role"></span><button id="desk-profile">Open profile &#8599;</button></div>
 <div class="desk-nav"><button id="previous" aria-label="Previous employee">&#8592;</button><span id="desk-count"></span><button id="next" aria-label="Next employee">&#8594;</button></div>
 <div class="controls"><button id="larger" aria-label="Zoom in">+</button><button id="smaller" aria-label="Zoom out">−</button><button id="rotate" aria-label="Rotate floor" title="Rotate floor">⟳</button><button id="reset" aria-label="Reset view" title="Reset view">↺</button></div></div>
+<div id="activity-bar" class="activity-bar"><div><strong>Activity simulation</strong><span id="activity-count">Loading the team…</span></div><div><button type="button" id="meeting-camera">Meeting room</button><button type="button" id="motion-toggle">Pause</button></div></div>
 <p class="navigation-help" id="navigation-help"><span class="mouse-help">Drag to orbit · Right-drag to move · Scroll to zoom</span><span class="touch-help">Drag to orbit · Move with two fingers · Pinch to zoom</span></p>
 <footer><span><i></i> Team floor</span><span><i></i> Meeting room</span><span><i></i> Lounge</span></footer></article></div><p id="status" role="status"></p></main>
 <dialog id="card"><form id="form"><div class="bar"><span id="seat"></span><button type="button" id="close" aria-label="Close profile">×</button></div><h2 id="heading">Employee profile</h2>
@@ -111,4 +112,4 @@
   }
 ]
 </script>
-<script src="assets/three.min.js"></script><script src="assets/orbit-controls.js"></script><script src="scene.js?v=6"></script><script src="office.js?v=5"></script></body></html>
+<script src="assets/three.min.js"></script><script src="assets/orbit-controls.js"></script><script src="activity.js?v=7"></script><script src="scene.js?v=7"></script><script src="office.js?v=7"></script></body></html>
