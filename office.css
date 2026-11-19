@@ -40,3 +40,4 @@ footer{background:#fcfbf7;border-top:1px solid var(--line)}.staff{padding:10px 2
 .desk-mode:not(.pending):not(.fallback) #pins{display:block;pointer-events:none}
 .desk-mode .pin{font-size:0;border-radius:14px;padding:3px 7px;background:#20292ae6;border:1px solid #eee9d58c;box-shadow:none;white-space:nowrap;max-width:23%;overflow:hidden;text-overflow:ellipsis;color:white}
 .desk-mode .pin:after{content:attr(data-caption);font:500 10px/1.35 "Segoe UI",sans-serif}.desk-mode .pin.current-person:after{font-size:12px}.desk-mode .pin.current-person{z-index:1;background:#172525}
+@media(min-width:721px){aside{height:calc(clamp(390px,56vh,730px) + 98px)}#list{min-height:0}.layout{align-items:start}}
