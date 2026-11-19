@@ -167,6 +167,6 @@ const OfficeScene = (() => {
     for(const [id,delta] of [['larger',.2],['smaller',-.2],['reset',0]])document.getElementById(id).onclick=()=>{if(!delta){select(view);return}zoom=Math.max(.7,Math.min(3,zoom+delta));redraw()};
     new ResizeObserver(()=>redraw()).observe(stage);visitDesk(0);
   }
-  function label(i,name,role){profiles[i]={name,role};labels[i].dataset.caption=role?name+' · '+role:name;labels[i].title=name;labels[i].setAttribute('aria-label',name);if(i===selected)profileInfo()}
+  function label(i,name,role){profiles[i]={name,role};labels[i].dataset.caption=role && role!==name?name+' · '+role:name;labels[i].title=name;labels[i].setAttribute('aria-label',name);if(i===selected)profileInfo()}
   return {init,label,asset,visit:i=>visitDesk(i)};
 })();

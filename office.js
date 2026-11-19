@@ -1,18 +1,29 @@
 const $=id=>document.getElementById(id);
 const number=new Intl.NumberFormat('en-US');
 const localOffice=location.hostname==='127.0.0.1' && location.port==='4247';
-const storageKey='company-office/v1/'+new URL('.',location.href).pathname;
+const rosterPath=new URL('.',location.href).pathname;
+const storageKey='company-office/v2/'+rosterPath;
+const legacyKey='company-office/v1/'+rosterPath;
+const startingRoster=JSON.parse($('team-roster').textContent);
+const profileFields=['name','role','duties'];
 function browserRoster(){
-  const raw=localStorage.getItem(storageKey);
-  if(!raw)return emptyRoster();
+  const current=localStorage.getItem(storageKey);
+  const raw=current ?? localStorage.getItem(legacyKey);
+  if(raw===null)return startingRoster.map(record=>({...record}));
   const records=JSON.parse(raw);
-  if(!Array.isArray(records)||records.length!==14||records.some((e,i)=>e.id!==i+1||['name','role','duties'].some(k=>typeof e[k]!=='string')))throw Error('Invalid roster');
+  if(!Array.isArray(records)||records.length!==startingRoster.length||records.some((e,i)=>!e||e.id!==i+1||profileFields.some(k=>typeof e[k]!=='string')))throw Error('Invalid roster');
+  if(current===null){
+    for(const [i,record] of records.entries()){
+      for(const field of profileFields){
+        if(!record[field].trim())record[field]=startingRoster[i][field];
+      }
+    }
+  }
   return records;
 }
 if(!localOffice)$('storage-mode').textContent='Saved in this browser';
 let employees=[],editing=null,original=null;
 const title=e=>e.name || 'Employee '+number.format(e.id);
-const emptyRoster=()=>Array.from({length:14},(_,i)=>({id:i+1,name:'',role:'',duties:''}));
 function render(){
   const query=$('search').value.trim().toLocaleLowerCase();
   $('list').replaceChildren();
@@ -63,7 +74,7 @@ $('form').onsubmit=async event=>{
 };
 $('search').oninput=render;$('close').onclick=()=>$('card').close();
 $('card').setAttribute('aria-labelledby','heading');
-OfficeScene.init(openEmployee);employees=emptyRoster();render();
+OfficeScene.init(openEmployee);employees=startingRoster;render();
 loadRoster().catch(()=>{$('status').textContent='Unable to read the directory. Check your browser storage settings.'});
 
-window.addEventListener('storage',event=>{if(!localOffice && event.key===storageKey)loadRoster().catch(()=>{$('status').textContent='Unable to refresh the team directory.'})});
+window.addEventListener('storage',event=>{if(!localOffice && [storageKey,legacyKey,null].includes(event.key))loadRoster().catch(()=>{$('status').textContent='Unable to refresh the team directory.'})});
