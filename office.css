@@ -36,3 +36,7 @@ footer{background:#fcfbf7;border-top:1px solid var(--line)}.staff{padding:10px 2
 #standin{position:absolute;height:145%;top:4%;left:56%;transform:translateX(-50%);filter:drop-shadow(4px 5px 5px #0003)}
 .badge{position:relative;width:44px;height:47px;min-width:44px;overflow:hidden;align-items:end;justify-content:end;font:600 10px/1.6 "Segoe UI",sans-serif;padding-right:3px;color:#213330;isolation:isolate}.badge img{position:absolute;top:-15%;left:-21%;width:132%;z-index:-1}
 @media(max-width:720px){.desk-mode #desk-info{left:8px;bottom:8px;padding:8px 11px;min-width:115px}.desk-mode .desk-nav{right:8px;bottom:8px}.scene-title{flex-wrap:wrap}.desk-nav button{padding:3px 7px}#desk-profile{margin-top:2px}.intro h1{font-size:32px}}
+.badge img{top:0;left:-7%;width:112%}
+.desk-mode:not(.pending):not(.fallback) #pins{display:block;pointer-events:none}
+.desk-mode .pin{font-size:0;border-radius:14px;padding:3px 7px;background:#20292ae6;border:1px solid #eee9d58c;box-shadow:none;white-space:nowrap;max-width:23%;overflow:hidden;text-overflow:ellipsis;color:white}
+.desk-mode .pin:after{content:attr(data-caption);font:500 10px/1.35 "Segoe UI",sans-serif}.desk-mode .pin.current-person:after{font-size:12px}.desk-mode .pin.current-person{z-index:1;background:#172525}

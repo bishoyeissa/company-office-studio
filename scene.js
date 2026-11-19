@@ -2,7 +2,7 @@
 const OfficeScene = (() => {
   const seats = [];
   [[-8.8,-5.6,-2.4,0.8],[-8.8,-5.6,-2.4],[-8.8,-5.6,-2.4,0.8],[-8.8,-5.6,-2.4]].forEach((row,r) =>
-    row.forEach(x => seats.push({x,z:-4.9+r*3.15})));
+    row.forEach(x => seats.push({x,z:4.55-r*3.15})));
   let deskCamera, camera, renderer, scene, view='desk', zoom=1, angle=.23, focus='all', redraw=()=>{}, onPick;
   const centers={all:[0,.6,0],team:[-4.7,1.2,-.2],meeting:[7,.95,-3.6],lounge:[7,.8,4]};
   const stage=document.querySelector('#stage'), holder=document.querySelector('#drawing');
@@ -16,7 +16,7 @@ const OfficeScene = (() => {
   function box(x,y,z,w,h,d,c){const o=mesh(geom('box',()=>new THREE.BoxGeometry(1,1,1)),c,x,y,z);o.scale.set(w,h,d);return o}
   function cylinder(x,y,z,rt,rb,h,c,sides=14){return mesh(geom([rt,rb,h,sides].join('/'),()=>new THREE.CylinderGeometry(rt,rb,h,sides)),c,x,y,z)}
   function oval(x,y,z,w,h,d,c){const o=mesh(geom('oval',()=>new THREE.SphereGeometry(1,12,10)),c,x,y,z);o.scale.set(w,h,d);return o}
-  const timber=0xbf8d5e,frame=0x28453d,porcelain=0xe8e6d5;
+  const timber=0xbf8d5e,frame=0x283134,porcelain=0xe8e6d5;
   function plant(x,z,scale=1){
     cylinder(x,.35*scale,z,.45*scale,.29*scale,.7*scale,0xc2835b);
     for(let i=0;i<7;i++){const a=i*2.4;
@@ -28,13 +28,13 @@ const OfficeScene = (() => {
   }
   function desk(s,i){
     const {x,z}=s, start=scene.children.length;
-    box(x,1.1,z,2.48,.16,1.18,0xdab58d);
+    box(x,1.1,z,2.48,.16,1.18,0xb59879);
     for(const dx of [-.99,.99])box(x+dx,.55,z,.12,1.05,.89,frame);
     box(x,.78,z-.49,2.1,.55,.08,0x8a684e);
     cylinder(x-.85,1.22,z-.17,.16,.18,.05,0xa97839);
     cylinder(x-.85,1.55,z-.17,.028,.028,.62,0xac844b);
-    cylinder(x-.85,1.87,z-.17,.07,.24,.18,0xb99459);
-    box(x,1.32,z-.22,.1,.33,.11,frame);box(x,1.64,z-.25,.98,.61,.11,frame);
+    cylinder(x-.85,1.87,z-.17,.07,.24,.18,0x9d8564);
+    box(x,1.205,z-.22,.42,.04,.28,frame);box(x,1.32,z-.22,.1,.33,.11,frame);box(x,1.64,z-.25,.98,.61,.11,frame);
     box(x,1.65,z-.186,.86,.49,.02,[0x9bc2ba,0xb0cbd1,0xadc3ab][i%3]);
     box(x,1.2,z+.15,.68,.04,.23,0x536965);box(x+.72,1.2,z-.02,.4,.045,.47,porcelain);
     chair(x+.93,z+.99);
@@ -81,8 +81,8 @@ const OfficeScene = (() => {
     box(0,-.43,0,23.4,.75,15.7,0x506b60);box(0,-.03,0,23.25,.18,15.55,0xe1c8a4);
     for(let k=-7;k<=7;k++)box(0,.066,k,23.2,.012,.022,0xcba97d);
     for(let k=-7;k<=7;k++)for(let j=0;j<4;j++)box(-10+j*6+(Math.abs(k)%2)*2,.066,k+.5,.021,.012,.98,0xcba97d);
-    box(0,.78,-7.65,23.3,1.46,.20,0xc7d3bc);box(-11.5,.65,0,.20,1.2,15.4,0xc7d3bc);
-    for(let i=0;i<7;i++){const x=-9.85+i*3.24;box(x,2.51,-7.68,3.14,1.93,.1,0xb7d6d4);box(x-1.60,2.51,-7.65,.08,2.10,.17,frame)}
+    box(0,.78,-7.65,23.3,1.46,.20,0xc4c6c0);box(-11.5,.65,0,.20,1.2,15.4,0xc4c6c0);
+    for(let i=0;i<7;i++){const x=-9.85+i*3.24;box(x,2.51,-7.68,3.14,1.93,.1,0xacc5cc);box(x-1.60,2.51,-7.65,.08,2.10,.17,frame)}
     box(-.12,3.52,-7.64,22.9,.1,.19,frame);box(0,1.48,-7.62,23.2,.14,.29,frame);
     box(6.99,.09,-3.79,7.74,.06,6.6,0x72948c);
     box(7,.99,-3.78,3.92,.22,1.8,timber);for(const x of [5.8,8.2])box(x,.52,-3.78,.29,.9,1.03,frame);
@@ -126,13 +126,21 @@ const OfficeScene = (() => {
           const s=seats[selected],dist=w/h<1.15?3.2:2.7;
           deskCamera.aspect=w/h;deskCamera.position.set(s.x+1.12,2.13,s.z-.91+dist);
           deskCamera.lookAt(s.x-.12,1.75,s.z-.91);deskCamera.updateProjectionMatrix();
-          renderer.render(scene,deskCamera);return;
+          deskCamera.updateMatrixWorld();
+          renderer.render(scene,deskCamera);
+          seats.forEach(({x,z},i)=>{
+            const v=new THREE.Vector3(x,2.69,z-.91).project(deskCamera), label=labels[i];
+            const visible=Boolean(people[i])&&v.z>0&&v.z<1&&Math.abs(v.x)<.88&&v.y>-.6&&v.y<.96;
+            label.style.visibility=visible?'visible':'hidden';
+            label.style.left=(v.x+1)*50+'%';label.style.top=(1-v.y)*50+'%';
+            label.classList.toggle('current-person',i===selected);
+          });return;
         }
         const top=view==='top', span=Math.max((top?8.7:9.4),(top?12.7:14.8)*h/w)/zoom;
         const [cx,cy,cz]=centers[focus];
         Object.assign(camera,{left:-span*w/h,right:span*w/h,top:span,bottom:-span});
         camera.position.set(cx+(top?0:38*Math.sin(angle)),cy+(top?40:20),cz+(top?.001:38*Math.cos(angle)));camera.lookAt(cx,cy,cz);camera.updateProjectionMatrix();camera.updateMatrixWorld();
-        renderer.render(scene,camera);seats.forEach(({x,z},i)=>{const v=new THREE.Vector3(x,top?2.6:2.8,z-.91).project(camera);labels[i].style.left=(v.x+1)*50+'%';labels[i].style.top=(1-v.y)*50+'%'})};
+        renderer.render(scene,camera);seats.forEach(({x,z},i)=>{const v=new THREE.Vector3(x,top?2.6:2.8,z-.91).project(camera);labels[i].style.visibility='visible';labels[i].style.left=(v.x+1)*50+'%';labels[i].style.top=(1-v.y)*50+'%'})};
       const queue=seats.map((s,i)=>[s,i]);
       async function loadQueue(){while(queue.length){const [s,i]=queue.shift();try{await loadPerson(s,i)}catch(error){console.warn('Unable to load desk '+(i+1),error)}}}
       for(let worker=0;worker<3;worker++)loadQueue();
@@ -159,6 +167,6 @@ const OfficeScene = (() => {
     for(const [id,delta] of [['larger',.2],['smaller',-.2],['reset',0]])document.getElementById(id).onclick=()=>{if(!delta){select(view);return}zoom=Math.max(.7,Math.min(3,zoom+delta));redraw()};
     new ResizeObserver(()=>redraw()).observe(stage);visitDesk(0);
   }
-  function label(i,name,role){profiles[i]={name,role};labels[i].title=name;labels[i].setAttribute('aria-label',name);if(i===selected)profileInfo()}
+  function label(i,name,role){profiles[i]={name,role};labels[i].dataset.caption=role?name+' · '+role:name;labels[i].title=name;labels[i].setAttribute('aria-label',name);if(i===selected)profileInfo()}
   return {init,label,asset,visit:i=>visitDesk(i)};
 })();
