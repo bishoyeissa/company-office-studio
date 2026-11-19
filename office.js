@@ -80,3 +80,35 @@ OfficeScene.init(openEmployee);employees=startingRoster;render();
 loadRoster().catch(()=>{$('status').textContent='Unable to read the directory. Check your browser storage settings.'});
 
 window.addEventListener('storage',event=>{if(!localOffice && [storageKey,legacyKey,null].includes(event.key))loadRoster().catch(()=>{$('status').textContent='Unable to refresh the team directory.'})});
+
+const officePanel=$('office-panel');
+const fullScreenButton=$('fullscreen-toggle');
+function updateFullScreen(){
+  const expanded=document.fullscreenElement===officePanel || officePanel.classList.contains('viewport-mode');
+  officePanel.classList.toggle('expanded',expanded);
+  fullScreenButton.setAttribute('aria-pressed',String(expanded));
+  $('fullscreen-label').textContent=expanded?'Exit full screen':'Full screen';
+}
+function setViewportMode(enabled){
+  officePanel.classList.toggle('viewport-mode',enabled);
+  document.documentElement.classList.toggle('office-expanded',enabled);
+  updateFullScreen();
+}
+fullScreenButton.addEventListener('click',async()=>{
+  if(officePanel.classList.contains('viewport-mode')){
+    setViewportMode(false);
+  }else if(document.fullscreenElement===officePanel){
+    await document.exitFullscreen();
+  }else if(officePanel.requestFullscreen && document.fullscreenEnabled){
+    try{await officePanel.requestFullscreen()}catch{setViewportMode(true)}
+  }else{
+    setViewportMode(true);
+  }
+});
+document.addEventListener('fullscreenchange',updateFullScreen);
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape' && officePanel.classList.contains('viewport-mode') && !$('card').open){
+    setViewportMode(false);
+    fullScreenButton.focus({preventScroll:true});
+  }
+});

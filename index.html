@@ -1,29 +1,31 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Office Studio | Team workspace</title><link rel="stylesheet" href="office.css?v=7"></head>
+<title>Office Studio | Team workspace</title><link rel="stylesheet" href="office.css?v=8"></head>
 <body>
 <header><div class="brand"><span class="mark" aria-hidden="true">◈</span> Office Studio</div><div class="local"><i></i><span id="storage-mode">Local workspace</span></div></header>
 <main>
 <section class="intro"><div><h1>Team workspace</h1><p>Explore the office in 3D or open an employee profile.</p></div><div class="summary"><b id="done">14 / 14</b><span>Profiles assigned</span></div></section>
 <div class="layout"><aside><div class="bar"><h2>Team directory</h2><span class="count">14</span></div>
 <input id="search" type="search" aria-label="Search team directory" placeholder="Search by name or role"><div id="list"></div></aside>
-<article><div class="bar scene-title"><h2 id="view-title">Explore in 3D</h2><div class="tabs" role="group" aria-label="Office views"><button id="iso" aria-pressed="true">Explore</button><button id="desk-tab" aria-pressed="false">Desk</button><button id="top" aria-pressed="false">Plan</button><button id="interior-tab" aria-pressed="false">Interior</button></div></div>
+<article id="office-panel"><div class="bar scene-title"><h2 id="view-title">Explore in 3D</h2><div class="tabs" role="group" aria-label="Office views"><button id="iso" aria-pressed="true">Explore</button><button id="desk-tab" aria-pressed="false">Desk</button><button id="top" aria-pressed="false">Plan</button><button id="interior-tab" aria-pressed="false">Interior</button></div></div>
 <div id="stage" class="explore-mode">
 <div id="interior-view"><img src="assets/interior.webp" alt="Sunlit studio with workstations, a glass meeting room and a lounge"><button class="room-link team-link" data-room="team">Team floor</button><button class="room-link meeting-link" data-room="meeting">Meeting room</button><button class="room-link lounge-link" data-room="lounge">Lounge</button></div>
 <div id="drawing" aria-label="Interactive 3D office"></div><div id="pins"></div>
+<button type="button" id="fullscreen-toggle" aria-controls="office-panel" aria-pressed="false"><span aria-hidden="true">⛶</span> <span id="fullscreen-label">Full screen</span></button>
 <div id="portrait-scene"><img id="standin" alt=""></div>
 <div id="desk-info"><div id="desk-number"></div><strong id="desk-name"></strong><span id="desk-role"></span><button id="desk-profile">Open profile &#8599;</button></div>
 <div class="desk-nav"><button id="previous" aria-label="Previous employee">&#8592;</button><span id="desk-count"></span><button id="next" aria-label="Next employee">&#8594;</button></div>
 <div class="controls"><button id="larger" aria-label="Zoom in">+</button><button id="smaller" aria-label="Zoom out">−</button><button id="rotate" aria-label="Rotate floor" title="Rotate floor">⟳</button><button id="reset" aria-label="Reset view" title="Reset view">↺</button></div></div>
 <div id="activity-bar" class="activity-bar"><div><strong>Activity simulation</strong><span id="activity-count">Loading the team…</span></div><div><button type="button" id="meeting-camera">Meeting room</button><button type="button" id="motion-toggle">Pause</button></div></div>
 <p class="navigation-help" id="navigation-help"><span class="mouse-help">Drag to orbit · Right-drag to move · Scroll to zoom</span><span class="touch-help">Drag to orbit · Move with two fingers · Pinch to zoom</span></p>
-<footer><span><i></i> Team floor</span><span><i></i> Meeting room</span><span><i></i> Lounge</span></footer></article></div><p id="status" role="status"></p></main>
+<footer><span><i></i> Team floor</span><span><i></i> Meeting room</span><span><i></i> Lounge</span></footer>
 <dialog id="card"><form id="form"><div class="bar"><span id="seat"></span><button type="button" id="close" aria-label="Close profile">×</button></div><h2 id="heading">Employee profile</h2>
 <label for="empname">Employee name</label><input id="empname" maxlength="64" autocomplete="off" placeholder="Enter a name">
 <label for="role">Job title</label><input id="role" maxlength="100" list="job-titles" placeholder="e.g. Product Manager"><datalist id="job-titles"><option>General Manager</option><option>HR and Talent Acquisition Manager</option><option>Chief of Staff</option><option>Trainer</option><option>Media Buyer</option><option>GoHighLevel Expert</option><option>Video Editor</option><option>Product Manager</option><option>Security Officer</option><option>AI Specialist</option><option>Accountant</option><option>Copywriter</option><option>Lawyer</option><option>Chief Finance Officer</option></datalist>
 <label for="duties">Responsibilities</label><textarea id="duties" maxlength="2000" rows="7" placeholder="What work will this employee own?"></textarea>
 <div id="feedback" role="status"></div><button type="submit" id="save">Save profile</button></form></dialog>
+</article></div><p id="status" role="status"></p></main>
 <script id="team-roster" type="application/json">
 [
   {
@@ -112,4 +114,4 @@
   }
 ]
 </script>
-<script src="assets/three.min.js"></script><script src="assets/orbit-controls.js"></script><script src="activity.js?v=7"></script><script src="scene.js?v=7"></script><script src="office.js?v=7"></script></body></html>
+<script src="assets/three.min.js"></script><script src="assets/orbit-controls.js"></script><script src="activity.js?v=7"></script><script src="scene.js?v=7"></script><script src="office.js?v=8"></script></body></html>

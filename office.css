@@ -54,3 +54,10 @@ footer{background:#fcfbf7;border-top:1px solid var(--line)}.staff{padding:10px 2
 .staff .staff-activity{font-size:11px;color:#27675d;margin-top:2px}.staff-activity:empty{display:none}
 .explore-mode .pin[data-activity="Walking"]{background:#845226}.explore-mode .pin[data-activity="In meeting"]{background:#394d80}.explore-mode .pin[data-activity="Collaborating"]{background:#176854}
 @media(max-width:620px){.activity-bar{align-items:flex-start}.activity-bar>div:first-child{display:grid;gap:3px}.activity-bar>div:last-child{justify-content:flex-end;gap:5px}}
+#fullscreen-toggle{position:absolute;z-index:4;top:10px;right:10px;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:6px;background:#203031ed;color:white;border:1px solid #ffffffe0;font-size:13px;box-shadow:0 1px 5px #0003}
+#fullscreen-toggle span:first-child{font:18px/1 "Segoe UI Symbol",sans-serif}
+#office-panel.expanded{display:flex;flex-direction:column;width:100%;height:100%;max-width:none;max-height:none;border:0;border-radius:0;background:#f7f6f1}
+#office-panel.expanded #stage{flex:1;min-height:0;height:auto}
+#office-panel.expanded>.bar,#office-panel.expanded>.activity-bar,#office-panel.expanded>.navigation-help,#office-panel.expanded>footer{flex-shrink:0}
+#office-panel.viewport-mode{position:fixed;inset:0;z-index:1000;height:100vh;height:100dvh}
+html.office-expanded{overflow:hidden}
