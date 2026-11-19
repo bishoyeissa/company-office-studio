@@ -3,7 +3,7 @@ const OfficeScene = (() => {
   const seats = [];
   [[-8.8,-5.6,-2.4,0.8],[-8.8,-5.6,-2.4],[-8.8,-5.6,-2.4,0.8],[-8.8,-5.6,-2.4]].forEach((row,r) =>
     row.forEach(x => seats.push({x,z:4.55-r*3.15})));
-  let deskCamera, camera, renderer, scene, view='desk', zoom=1, angle=.23, focus='all', redraw=()=>{}, onPick;
+  let exploreCamera, orbit, deskCamera, camera, renderer, scene, view='iso', zoom=1, focus='all', redraw=()=>{}, onPick;
   const centers={all:[0,.6,0],team:[-4.7,1.2,-.2],meeting:[7,.95,-3.6],lounge:[7,.8,4]};
   const stage=document.querySelector('#stage'), holder=document.querySelector('#drawing');
   const labels=[], material=new Map(), geometry=new Map();
@@ -75,7 +75,7 @@ const OfficeScene = (() => {
       const figure=new THREE.Mesh(geometry,mat);figure.userData.seat=i;figure.castShadow=true;person.add(figure);
     }
     person.position.set(seat.x,.08,seat.z-.91);person.rotation.y=.10*Math.sin(i*1.6);
-    scene.add(person);people[i]=person;if(selected===i)profileInfo();redraw();
+    scene.add(person);renderer.shadowMap.needsUpdate=true;people[i]=person;if(selected===i)profileInfo();redraw();
   }
   function office(){
     box(0,-.43,0,23.4,.75,15.7,0x506b60);box(0,-.03,0,23.25,.18,15.55,0xe1c8a4);
@@ -109,19 +109,92 @@ const OfficeScene = (() => {
     for(let n=0;n<8;n++)box(10.9,.9,-6.8+n*.54,.24,1.6,.24,n%2?0x946d51:0x765742);
     seats.forEach(desk);
   }
+  function inspectSeat(i){
+    if(view==='iso'){
+      selected=i;
+      profileInfo();
+    }else{
+      visitDesk(i);
+    }
+    onPick(i);
+  }
+  function frameRoom(room){
+    const target=room==='all'?[-4.0,1.3,-.3]:centers[room];
+    const distance=room==='all'?14:room==='team'?11:7;
+    orbit.target.set(...target);
+    exploreCamera.position.copy(orbit.target).add(new THREE.Vector3(.31,.38,1).multiplyScalar(distance));
+    orbit.update();
+  }
   function init(pick){
     onPick=pick;stage.style.setProperty('--office-photo','url("'+asset('interior.webp')+'")');
-    seats.forEach((s,i)=>{const b=document.createElement('button');b.className='pin';b.textContent=String(i+1);b.onclick=()=>{visitDesk(i);onPick(i)};labels.push(b);document.querySelector('#pins').append(b)});
+    seats.forEach((s,i)=>{const b=document.createElement('button');b.className='pin';b.textContent=String(i+1);b.onclick=()=>inspectSeat(i);labels.push(b);document.querySelector('#pins').append(b)});
     try{
       renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
-      renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;holder.append(renderer.domElement);
+      renderer.shadowMap.enabled=true;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;holder.append(renderer.domElement);
       scene=new THREE.Scene();camera=new THREE.OrthographicCamera(-16,16,12,-12,.1,150);
       deskCamera=new THREE.PerspectiveCamera(47,1,.07,90);
       scene.add(new THREE.HemisphereLight(0xfff8e8,0xb2c2af,2.45));const sun=new THREE.DirectionalLight(0xffead0,2.5);
       sun.position.set(-9,24,14);sun.castShadow=true;Object.assign(sun.shadow.camera,{left:-17,right:17,top:17,bottom:-17,far:60});sun.shadow.mapSize.set(1024,1024);sun.shadow.normalBias=.025;scene.add(sun);
       office();
-      renderer.domElement.addEventListener('click',e=>{const r=holder.getBoundingClientRect();const ray=new THREE.Raycaster();ray.setFromCamera({x:2*(e.clientX-r.left)/r.width-1,y:1-2*(e.clientY-r.top)/r.height},view==='desk'?deskCamera:camera);const hit=ray.intersectObjects(scene.children,true)[0];if(hit && Number.isInteger(hit.object.userData.seat)){visitDesk(hit.object.userData.seat);onPick(hit.object.userData.seat)}});
-      redraw=()=>{const w=holder.clientWidth,h=holder.clientHeight;if(!w||!h||view==='interior')return;renderer.setSize(w,h,false);
+      const canvas=renderer.domElement;
+      exploreCamera=new THREE.PerspectiveCamera(50,1,.08,100);
+      orbit=new OfficeOrbitControls(exploreCamera,canvas);
+      orbit.minDistance=1.4;
+      orbit.maxDistance=34;
+      orbit.minPolarAngle=.12;
+      orbit.maxPolarAngle=Math.PI*.49;
+      orbit.maxTargetRadius=15;
+      orbit.rotateSpeed=.63;
+      orbit.screenSpacePanning=false;
+      orbit.zoomToCursor=true;
+      let framePending=false;
+      orbit.addEventListener('change',()=>{
+        if(framePending)return;
+        framePending=true;
+        requestAnimationFrame(()=>{framePending=false;redraw()});
+      });
+      orbit.addEventListener('start',()=>stage.classList.add('navigating'));
+      orbit.addEventListener('end',()=>stage.classList.remove('navigating'));
+      // A click inspects a person. A drag or a two-finger gesture only moves the camera.
+      let press=null;
+      canvas.addEventListener('pointerdown',event=>{
+        if(!event.isPrimary){press=null;return}
+        press=event.button===0?{id:event.pointerId,x:event.clientX,y:event.clientY}:null;
+      });
+      canvas.addEventListener('pointermove',event=>{
+        if(press && event.pointerId===press.id && Math.hypot(event.clientX-press.x,event.clientY-press.y)>4)press=null;
+      });
+      canvas.addEventListener('pointercancel',()=>{press=null});
+      canvas.addEventListener('click',event=>{
+        if(!press)return;
+        press=null;
+        const r=canvas.getBoundingClientRect();
+        const ray=new THREE.Raycaster();
+        const activeCamera=view==='iso'?exploreCamera:view==='desk'?deskCamera:camera;
+        ray.setFromCamera({x:2*(event.clientX-r.left)/r.width-1,y:1-2*(event.clientY-r.top)/r.height},activeCamera);
+        const hit=ray.intersectObjects(scene.children,true)[0];
+        if(hit && Number.isInteger(hit.object.userData.seat))inspectSeat(hit.object.userData.seat);
+      });
+      let width=0,height=0;
+      redraw=()=>{
+        const w=holder.clientWidth,h=holder.clientHeight;
+        if(!w||!h||view==='interior')return;
+        if(w!==width||h!==height){
+          width=w;height=h;renderer.setSize(w,h,false);
+          exploreCamera.aspect=w/h;exploreCamera.updateProjectionMatrix();
+        }
+        if(view==='iso'){
+          exploreCamera.updateMatrixWorld();
+          renderer.render(scene,exploreCamera);
+          seats.forEach(({x,z},i)=>{
+            const point=new THREE.Vector3(x,2.78,z-.91).project(exploreCamera);
+            const label=labels[i];
+            label.style.visibility=point.z>-1&&point.z<1&&Math.abs(point.x)<.97&&Math.abs(point.y)<.95?'visible':'hidden';
+            label.style.left=(point.x+1)*50+'%';
+            label.style.top=(1-point.y)*50+'%';
+          });
+          return;
+        }
         if(view==='desk'){
           const s=seats[selected],dist=w/h<1.15?3.2:2.7;
           deskCamera.aspect=w/h;deskCamera.position.set(s.x+1.12,2.13,s.z-.91+dist);
@@ -136,11 +209,11 @@ const OfficeScene = (() => {
             label.classList.toggle('current-person',i===selected);
           });return;
         }
-        const top=view==='top', span=Math.max((top?8.7:9.4),(top?12.7:14.8)*h/w)/zoom;
+        const span=Math.max(8.7,12.7*h/w)/zoom;
         const [cx,cy,cz]=centers[focus];
         Object.assign(camera,{left:-span*w/h,right:span*w/h,top:span,bottom:-span});
-        camera.position.set(cx+(top?0:38*Math.sin(angle)),cy+(top?40:20),cz+(top?.001:38*Math.cos(angle)));camera.lookAt(cx,cy,cz);camera.updateProjectionMatrix();camera.updateMatrixWorld();
-        renderer.render(scene,camera);seats.forEach(({x,z},i)=>{const v=new THREE.Vector3(x,top?2.6:2.8,z-.91).project(camera);labels[i].style.visibility='visible';labels[i].style.left=(v.x+1)*50+'%';labels[i].style.top=(1-v.y)*50+'%'})};
+        camera.position.set(cx,cy+40,cz+.001);camera.lookAt(cx,cy,cz);camera.updateProjectionMatrix();camera.updateMatrixWorld();
+        renderer.render(scene,camera);seats.forEach(({x,z},i)=>{const v=new THREE.Vector3(x,2.6,z-.91).project(camera);labels[i].style.visibility='visible';labels[i].style.left=(v.x+1)*50+'%';labels[i].style.top=(1-v.y)*50+'%'})};
       const queue=seats.map((s,i)=>[s,i]);
       async function loadQueue(){while(queue.length){const [s,i]=queue.shift();try{await loadPerson(s,i)}catch(error){console.warn('Unable to load desk '+(i+1),error)}}}
       for(let worker=0;worker<3;worker++)loadQueue();
@@ -149,10 +222,13 @@ const OfficeScene = (() => {
       labels.forEach((b,i)=>{b.style.left=(17+(i%4)*22)+'%';b.style.top=(23+Math.floor(i/4)*17)+'%'});
       ['smaller','larger','reset','rotate'].forEach(id=>document.getElementById(id).disabled=true);
     }
-    const views={desk:'Desk view',interior:'Office interior',iso:'Work floor',top:'Floor plan'};
+    const views={desk:'Desk view',interior:'Office interior',iso:'Explore in 3D',top:'Floor plan'};
     const tabId=v=>({interior:'interior-tab',desk:'desk-tab'})[v]||v;
-    function select(v,room='all'){
-      view=v;focus=room;zoom=room==='all'?1:room==='team'?1.45:2.4;angle=.23;
+    function select(v,room='all',reframe=false){
+      view=v;focus=room;zoom=room==='all'?1:room==='team'?1.45:2.4;
+      if(orbit){orbit.enabled=v==='iso';if(orbit.enabled && reframe)frameRoom(room)}
+      stage.classList.toggle('explore-mode',v==='iso');
+      document.getElementById('navigation-help').hidden=v!=='iso'||stage.classList.contains('fallback');
       stage.classList.toggle('interior-mode',v==='interior');stage.classList.toggle('desk-mode',v==='desk');
       document.getElementById('view-title').textContent=({team:'Team floor',meeting:'Meeting room',lounge:'Lounge'})[room]||views[v];
       for(const key of Object.keys(views))document.getElementById(tabId(key)).setAttribute('aria-pressed',String(key===v));
@@ -162,11 +238,17 @@ const OfficeScene = (() => {
     for(const v of Object.keys(views))document.getElementById(tabId(v)).onclick=()=>select(v);
     document.getElementById('previous').onclick=()=>visitDesk(selected-1);document.getElementById('next').onclick=()=>visitDesk(selected+1);
     document.getElementById('desk-profile').onclick=()=>onPick(selected);
-    document.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>select('iso',b.dataset.room));
-    document.getElementById('rotate').onclick=()=>{angle+=Math.PI/6;redraw()};
-    for(const [id,delta] of [['larger',.2],['smaller',-.2],['reset',0]])document.getElementById(id).onclick=()=>{if(!delta){select(view);return}zoom=Math.max(.7,Math.min(3,zoom+delta));redraw()};
-    new ResizeObserver(()=>redraw()).observe(stage);visitDesk(0);
+    document.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>select('iso',b.dataset.room,true));
+    document.getElementById('rotate').onclick=()=>{exploreCamera.position.sub(orbit.target).applyAxisAngle(exploreCamera.up,Math.PI/6).add(orbit.target);orbit.update()};
+    for(const [id,delta] of [['larger',.2],['smaller',-.2],['reset',0]])document.getElementById(id).onclick=()=>{if(!delta){select(view,'all',true);return}
+      if(view==='iso' && orbit){
+        const offset=exploreCamera.position.clone().sub(orbit.target);
+        offset.setLength(THREE.MathUtils.clamp(offset.length()*(delta>0?.8:1.25),orbit.minDistance,orbit.maxDistance));
+        exploreCamera.position.copy(orbit.target).add(offset);orbit.update();return;
+      }
+      zoom=Math.max(.7,Math.min(3,zoom+delta));redraw()};
+    new ResizeObserver(()=>redraw()).observe(stage);profileInfo();select(stage.classList.contains('fallback')?'desk':'iso','all',true);
   }
   function label(i,name,role){profiles[i]={name,role};labels[i].dataset.caption=role && role!==name?name+' · '+role:name;labels[i].title=name;labels[i].setAttribute('aria-label',name);if(i===selected)profileInfo()}
-  return {init,label,asset,visit:i=>visitDesk(i)};
+  return {init,label,asset,visit:i=>{if(view==='iso'){selected=i;profileInfo()}else{visitDesk(i)}}};
 })();

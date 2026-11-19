@@ -1,21 +1,22 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Office Studio | Team workspace</title><link rel="stylesheet" href="office.css?v=4"></head>
+<title>Office Studio | Team workspace</title><link rel="stylesheet" href="office.css?v=6"></head>
 <body>
 <header><div class="brand"><span class="mark" aria-hidden="true">◈</span> Office Studio</div><div class="local"><i></i><span id="storage-mode">Local workspace</span></div></header>
 <main>
-<section class="intro"><div><h1>Team workspace</h1><p>Visit a desk to meet its employee and edit their role.</p></div><div class="summary"><b id="done">14 / 14</b><span>Profiles assigned</span></div></section>
+<section class="intro"><div><h1>Team workspace</h1><p>Explore the office in 3D or open an employee profile.</p></div><div class="summary"><b id="done">14 / 14</b><span>Profiles assigned</span></div></section>
 <div class="layout"><aside><div class="bar"><h2>Team directory</h2><span class="count">14</span></div>
 <input id="search" type="search" aria-label="Search team directory" placeholder="Search by name or role"><div id="list"></div></aside>
-<article><div class="bar scene-title"><h2 id="view-title">Desk view</h2><div class="tabs" role="group" aria-label="Office views"><button id="desk-tab" aria-pressed="true">Desk</button><button id="iso" aria-pressed="false">Floor</button><button id="top" aria-pressed="false">Plan</button><button id="interior-tab" aria-pressed="false">Interior</button></div></div>
-<div id="stage" class="desk-mode">
+<article><div class="bar scene-title"><h2 id="view-title">Explore in 3D</h2><div class="tabs" role="group" aria-label="Office views"><button id="iso" aria-pressed="true">Explore</button><button id="desk-tab" aria-pressed="false">Desk</button><button id="top" aria-pressed="false">Plan</button><button id="interior-tab" aria-pressed="false">Interior</button></div></div>
+<div id="stage" class="explore-mode">
 <div id="interior-view"><img src="assets/interior.webp" alt="Sunlit studio with workstations, a glass meeting room and a lounge"><button class="room-link team-link" data-room="team">Team floor</button><button class="room-link meeting-link" data-room="meeting">Meeting room</button><button class="room-link lounge-link" data-room="lounge">Lounge</button></div>
 <div id="drawing" aria-label="Interactive 3D office"></div><div id="pins"></div>
 <div id="portrait-scene"><img id="standin" alt=""></div>
 <div id="desk-info"><div id="desk-number"></div><strong id="desk-name"></strong><span id="desk-role"></span><button id="desk-profile">Open profile &#8599;</button></div>
 <div class="desk-nav"><button id="previous" aria-label="Previous employee">&#8592;</button><span id="desk-count"></span><button id="next" aria-label="Next employee">&#8594;</button></div>
 <div class="controls"><button id="larger" aria-label="Zoom in">+</button><button id="smaller" aria-label="Zoom out">−</button><button id="rotate" aria-label="Rotate floor" title="Rotate floor">⟳</button><button id="reset" aria-label="Reset view" title="Reset view">↺</button></div></div>
+<p class="navigation-help" id="navigation-help"><span class="mouse-help">Drag to orbit · Right-drag to move · Scroll to zoom</span><span class="touch-help">Drag to orbit · Move with two fingers · Pinch to zoom</span></p>
 <footer><span><i></i> Team floor</span><span><i></i> Meeting room</span><span><i></i> Lounge</span></footer></article></div><p id="status" role="status"></p></main>
 <dialog id="card"><form id="form"><div class="bar"><span id="seat"></span><button type="button" id="close" aria-label="Close profile">×</button></div><h2 id="heading">Employee profile</h2>
 <label for="empname">Employee name</label><input id="empname" maxlength="64" autocomplete="off" placeholder="Enter a name">
@@ -110,4 +111,4 @@
   }
 ]
 </script>
-<script src="assets/three.min.js"></script><script src="scene.js?v=5"></script><script src="office.js?v=5"></script></body></html>
+<script src="assets/three.min.js"></script><script src="assets/orbit-controls.js"></script><script src="scene.js?v=6"></script><script src="office.js?v=5"></script></body></html>
