@@ -2,11 +2,20 @@
 const OfficeActivity = (() => {
   const period=76, speed=1.85;
   const tasks={
-    'General Manager':'Reviewing team tasks', 'HR and Talent Acquisition Manager':'Preparing a job brief',
-    'Chief of Staff':'Planning the day', Trainer:'Preparing a lesson', 'Media Buyer':'Reviewing campaigns',
-    'GoHighLevel Expert':'Testing a funnel', 'Video Editor':'Editing a cut', 'Product Manager':'Reviewing a prototype',
-    'Security Officer':'Reviewing access', 'AI Specialist':'Testing a tool', Accountant:'Reconciling records',
-    Copywriter:'Writing copy', Lawyer:'Reviewing a contract', 'Chief Finance Officer':'Reviewing the budget'
+    'Office Manager':'Coordinating handoffs',
+    'Brand & Marketing Strategist':'Reviewing brand strategy',
+    'Content & Creative Strategist':'Preparing a creative brief',
+    Copywriter:'Writing campaign copy',
+    'Graphic Designer':'Designing campaign assets',
+    'Video Editor':'Editing a reel',
+    'Paid Media Specialist':'Reviewing campaign tests',
+    'Performance & Sales Analyst':'Analyzing orders and spend',
+    'Creative QA Reviewer':'Checking final exports',
+    'CRM & Sales Conversation Analyst':'Reviewing sales objections',
+    'Brand Asset Coordinator':'Organizing approved assets',
+    'AI Enablement Specialist':'Testing a role-specific skill',
+    'Social Media & Community Manager':'Preparing the publishing calendar',
+    'Email Monitoring & Reporting Specialist':'Preparing the email summary'
   };
   function home(seat){return [seat.x,seat.z-.99]}
   function aisle(seat){return [seat.x+.78,seat.z-1.82]}
@@ -25,7 +34,7 @@ const OfficeActivity = (() => {
   function workday(seats,round){
     const plans=seats.map(()=>null);
     const next=i=>(i+round*3)%seats.length;
-    [2,3,5].forEach((index,chair)=>{
+    [1,6,7].forEach((index,chair)=>{
       const id=next(index),seat=seats[id],exit=exitDesk(seat),chairX=[7,5.7,8.3][chair];
       const lane=2.48+chair*.12;
       const farSide=chair===0;
@@ -34,7 +43,7 @@ const OfficeActivity = (() => {
       const points=[...exit,[lane,aisle(seat)[1]],[lane,.48],[4.28,.48],[4.28,approachZ],[chairX,approachZ],end];
       plans[id]={kind:'meeting',leave:1+chair*1.7,back:38+chair*2,points,end,yaw:farSide?0:Math.PI};
     });
-    [[0,6,0,29],[4,11,5,34]].forEach(([a,b,leave,back])=>{
+    [[0,4,0,29],[2,3,5,34]].forEach(([a,b,leave,back])=>{
       const id=next(a),host=next(b),from=seats[id],to=seats[host],end=[to.x+.77,to.z-1.39];
       const route=exitDesk(from);
       // Use the side aisle when desks are on different rows.

@@ -2,23 +2,15 @@ const $=id=>document.getElementById(id);
 const number=new Intl.NumberFormat('en-US');
 const localOffice=location.hostname==='127.0.0.1' && location.port==='4247';
 const rosterPath=new URL('.',location.href).pathname;
-const storageKey='company-office/v2/'+rosterPath;
-const legacyKey='company-office/v1/'+rosterPath;
+const storageKey='company-office/v3/'+rosterPath;
 const startingRoster=JSON.parse($('team-roster').textContent);
 const profileFields=['name','role','duties'];
 function browserRoster(){
   const current=localStorage.getItem(storageKey);
-  const raw=current ?? localStorage.getItem(legacyKey);
+  const raw=current;
   if(raw===null)return startingRoster.map(record=>({...record}));
   const records=JSON.parse(raw);
   if(!Array.isArray(records)||records.length!==startingRoster.length||records.some((e,i)=>!e||e.id!==i+1||profileFields.some(k=>typeof e[k]!=='string')))throw Error('Invalid roster');
-  if(current===null){
-    for(const [i,record] of records.entries()){
-      for(const field of profileFields){
-        if(!record[field].trim())record[field]=startingRoster[i][field];
-      }
-    }
-  }
   return records;
 }
 if(!localOffice)$('storage-mode').textContent='Saved in this browser';
@@ -80,7 +72,7 @@ $('card').setAttribute('aria-labelledby','heading');
 OfficeScene.init(openEmployee);employees=startingRoster;render();
 loadRoster().catch(()=>{$('status').textContent='Unable to read the directory. Check your browser storage settings.'});
 
-window.addEventListener('storage',event=>{if(!localOffice && [storageKey,legacyKey,null].includes(event.key))loadRoster().catch(()=>{$('status').textContent='Unable to refresh the team directory.'})});
+window.addEventListener('storage',event=>{if(!localOffice && [storageKey,null].includes(event.key))loadRoster().catch(()=>{$('status').textContent='Unable to refresh the team directory.'})});
 
 const officePanel=$('office-panel');
 const fullScreenButton=$('fullscreen-toggle');
@@ -147,7 +139,7 @@ async function refreshTasks(){
     const copy=document.createElement('button');copy.type='button';copy.textContent='Copy for Codex';
     copy.onclick=async()=>{
       try{
-        await navigator.clipboard.writeText('Rami, please handle this task:\n\n'+task.brief);
+        await navigator.clipboard.writeText('Marwan, please handle this task:\n\n'+task.brief);
         $('task-message').textContent='Copied. Paste the task into your Codex chat to start work.';
       }catch{
         const range=document.createRange();range.selectNodeContents(brief);
@@ -183,7 +175,7 @@ $('task-form').onsubmit=async event=>{
       if(!response.ok)throw Error('Submission failed');
     }else localStorage.setItem(taskPrefix+submission.id,JSON.stringify(submission));
     submission=null;field.value='';
-    $('task-message').textContent='Task added to Rami’s inbox.';
+    $('task-message').textContent='Task added to Marwan’s inbox.';
     try{await refreshTasks()}catch{$('task-message').textContent='Task saved. Reopen the inbox to refresh the history.'}
   }catch{$('task-message').textContent='Could not confirm submission. Your brief is still here. Try again.'}
   finally{$('send-task').disabled=false;field.readOnly=false}

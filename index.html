@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Office Studio | Team workspace</title><link rel="stylesheet" href="office.css?v=9"></head>
+<title>Office Studio | Team workspace</title><link rel="stylesheet" href="office.css?v=11"></head>
 <body>
 <header><div class="brand"><span class="mark" aria-hidden="true">◈</span> Office Studio</div><div class="local"><i></i><span id="storage-mode">Local workspace</span></div></header>
 <main>
@@ -12,7 +12,7 @@
 <div id="stage" class="explore-mode">
 <div id="interior-view"><img src="assets/interior.webp" alt="Sunlit studio with workstations, a glass meeting room and a lounge"><button class="room-link team-link" data-room="team">Team floor</button><button class="room-link meeting-link" data-room="meeting">Meeting room</button><button class="room-link lounge-link" data-room="lounge">Lounge</button></div>
 <div id="drawing" aria-label="Interactive 3D office"></div><div id="pins"></div>
-<button type="button" id="task-open" aria-haspopup="dialog">Send task to Rami</button>
+<button type="button" id="task-open" aria-haspopup="dialog">Send task to Marwan</button>
 <button type="button" id="fullscreen-toggle" aria-controls="office-panel" aria-pressed="false"><span aria-hidden="true">⛶</span> <span id="fullscreen-label">Full screen</span></button>
 <div id="portrait-scene"><img id="standin" alt=""></div>
 <div id="desk-info"><div id="desk-number"></div><strong id="desk-name"></strong><span id="desk-role"></span><button id="desk-profile">Open profile &#8599;</button></div>
@@ -22,103 +22,103 @@
 <p class="navigation-help" id="navigation-help"><span class="mouse-help">Drag to orbit · Right-drag to move · Scroll to zoom</span><span class="touch-help">Drag to orbit · Move with two fingers · Pinch to zoom</span></p>
 <footer><span><i></i> Team floor</span><span><i></i> Meeting room</span><span><i></i> Lounge</span></footer>
 <dialog id="task-inbox" aria-labelledby="inbox-title">
-<div class="bar"><h2 id="inbox-title">Rami’s task inbox</h2><button type="button" id="inbox-close" aria-label="Close inbox">×</button></div>
-<form id="task-form"><label for="task-brief">Task brief</label><textarea id="task-brief" dir="auto" required maxlength="8000" rows="4" placeholder="What should Rami deliver? Include a deadline if needed."></textarea><button type="submit" id="send-task">Send task</button></form>
+<div class="bar"><h2 id="inbox-title">Marwan’s task inbox</h2><button type="button" id="inbox-close" aria-label="Close inbox">×</button></div>
+<form id="task-form"><label for="task-brief">Task brief</label><textarea id="task-brief" dir="auto" required maxlength="8000" rows="4" placeholder="What should Marwan deliver? Include a deadline if needed."></textarea><button type="submit" id="send-task">Send task</button></form>
 <p id="task-message" role="status"></p><h3>Task history</h3><ol id="task-history"></ol>
 <p class="inbox-note" id="task-storage">Tasks are saved in this browser. Copy a task to Codex to start work.</p>
 </dialog>
 <dialog id="card"><form id="form"><div class="bar"><span id="seat"></span><button type="button" id="close" aria-label="Close profile">×</button></div><h2 id="heading">Employee profile</h2>
 <label for="empname">Employee name</label><input id="empname" maxlength="64" autocomplete="off" placeholder="Enter a name">
-<label for="role">Job title</label><input id="role" maxlength="100" list="job-titles" placeholder="e.g. Product Manager"><datalist id="job-titles"><option>General Manager</option><option>HR and Talent Acquisition Manager</option><option>Chief of Staff</option><option>Trainer</option><option>Media Buyer</option><option>GoHighLevel Expert</option><option>Video Editor</option><option>Product Manager</option><option>Security Officer</option><option>AI Specialist</option><option>Accountant</option><option>Copywriter</option><option>Lawyer</option><option>Chief Finance Officer</option></datalist>
+<label for="role">Job title</label><input id="role" maxlength="100" list="job-titles" placeholder="e.g. Product Manager"><datalist id="job-titles"><option>Office Manager</option><option>Brand &amp; Marketing Strategist</option><option>Content &amp; Creative Strategist</option><option>Copywriter</option><option>Graphic Designer</option><option>Video Editor</option><option>Paid Media Specialist</option><option>Performance &amp; Sales Analyst</option><option>Creative QA Reviewer</option><option>CRM &amp; Sales Conversation Analyst</option><option>Brand Asset Coordinator</option><option>AI Enablement Specialist</option><option>Social Media &amp; Community Manager</option><option>Email Monitoring &amp; Reporting Specialist</option></datalist>
 <label for="duties">Responsibilities</label><textarea id="duties" maxlength="2000" rows="7" placeholder="What work will this employee own?"></textarea>
-<button type="button" id="profile-task" hidden>Send task to Rami</button><div id="feedback" role="status"></div><button type="submit" id="save">Save profile</button></form></dialog>
+<button type="button" id="profile-task" hidden>Send task to Marwan</button><div id="feedback" role="status"></div><button type="submit" id="save">Save profile</button></form></dialog>
 </article></div><p id="status" role="status"></p></main>
 <script id="team-roster" type="application/json">
 [
   {
     "id": 1,
-    "name": "Rami",
-    "role": "General Manager",
-    "duties": "• Break each company request into tasks. Give each task an owner, a due date and a clear definition of done.\n• Follow up on open work, resolve blockers and review the team's deliverables.\n• When a task is complete, prepare a short update for the owner with the result, where to review it and any decision needed."
+    "name": "Marwan",
+    "role": "Office Manager",
+    "duties": "Receive every task from the owner and establish the brand, objective, references, deliverables and deadline. Break work into assignments, identify dependencies and coordinate execution and review. Consolidate missing essential information into one set of questions for the owner. Track direct handoffs between employees and deliver the final results and files in one response. Escalate offer changes, material new wording and spending beyond the owner's limits."
   },
   {
     "id": 2,
-    "name": "Layla",
-    "role": "HR and Talent Acquisition Manager",
-    "duties": "• Identify which roles the team needs and draft a job description for each hire.\n• Define what each employee owns, what they must deliver and who reviews their work.\n• Prepare an onboarding brief and hand it to Nour so training matches the job."
+    "name": "Hagar",
+    "role": "Brand & Marketing Strategist",
+    "duties": "Build strategies for new brands and pages and review strategies for active brands. Analyze the audience, competitors, offers and performance data. Define objectives, positioning, messages, channels and success metrics. Deliver a 90-day strategy and the first 30-day implementation plan to Marwan. When data is limited, specify the hypotheses to test and how each result will be measured."
   },
   {
     "id": 3,
-    "name": "Omar",
-    "role": "Chief of Staff",
-    "duties": "• Organize the owner's calendar, flag scheduling conflicts and prepare meeting agendas.\n• Review incoming email and separate urgent decisions, follow-ups and items that can wait.\n• Prepare a daily brief of priorities, deadlines and outstanding replies for the owner."
+    "name": "Nada",
+    "role": "Content & Creative Strategist",
+    "duties": "Translate Hagar's strategy into content plans, campaign ideas, selling angles and hooks. Use advertising results and audience questions to develop new concepts. Brief Layla, Karim and Yousef with the audience, message, format, references and the specific hypothesis each creative will test."
   },
   {
     "id": 4,
-    "name": "Nour",
-    "role": "Trainer",
-    "duties": "• Look for new Claude skills relevant to the team's work each day.\n• Test a promising skill on a sample task and document when and how to use it.\n• Give the relevant employee a short exercise and use the result to check what they learned."
+    "name": "Layla",
+    "role": "Copywriter",
+    "duties": "Write captions, scripts, ad copy, on-design headlines and calls to action in each brand's voice. Match all wording to the current approved offer and approved claims. Produce distinct hook or selling-angle variants when the campaign requires testing. Hand approved copy to Karim and Yousef with placement and version information."
   },
   {
     "id": 5,
     "name": "Karim",
-    "role": "Media Buyer",
-    "duties": "• Analyze ad performance by campaign, audience and creative using the available campaign data.\n• Explain which ads are meeting the campaign objective and where spend is producing weak results.\n• Prepare a test brief for the next campaign and share the creative requirements with the Copywriter and Ziad."
+    "role": "Graphic Designer",
+    "duties": "Create posts, carousels, stories, covers and ads using the approved brand identity and product images. Follow each page's visual rules, including preserving Sara's facial features from the original image. Inspect exports at mobile size and verify legibility and the offer before handoff. Preserve editable source files and deliver each requested size and variant."
   },
   {
     "id": 6,
-    "name": "Mona",
-    "role": "GoHighLevel Expert",
-    "duties": "• Build GoHighLevel funnels from landing page to form submission and follow-up.\n• Map incoming leads to the right pipeline stage and configure the required workflow.\n• Run a test lead through the funnel and document any broken step before launch."
+    "name": "Yousef",
+    "role": "Video Editor",
+    "duties": "Turn scripts and supplied media into reels and video ads. Edit shot order, pacing, audio and on-screen captions. Export platform-specific versions and alternate hooks specified in the brief. Play every exported version and check audio, spelling, text placement and offer visibility before delivery. Retain the editing project and source references."
   },
   {
     "id": 7,
-    "name": "Ziad",
-    "role": "Video Editor",
-    "duties": "• Turn an approved script and footage into a rough cut with a clear opening and call to action.\n• Edit pacing, sound and captions, then prepare versions for the intended channels.\n• Submit the cut for review, apply feedback and deliver the final exports."
+    "name": "Omar",
+    "role": "Paid Media Specialist",
+    "duties": "Prepare the advertising plan, campaign structure, budgets, audiences and creative tests around the brand's objective. Monitor performance with Salma. Send Marwan evidence-backed recommendations to revise or stop an ad or increase its budget, quoting the supporting figures. Verify campaign settings, destination links and tracking before launch within granted permissions and spending limits."
   },
   {
     "id": 8,
-    "name": "Product Manager",
-    "role": "Product Manager",
-    "duties": "• Identify a recurring team problem and define a new internal tool that would solve it.\n• Write a short brief covering its users, workflow, first release and acceptance criteria.\n• Build or coordinate a prototype, test it with its intended users and prioritize fixes."
+    "name": "Salma",
+    "role": "Performance & Sales Analyst",
+    "duties": "Connect advertising spend with messages, orders and sales using available data. Deliver a daily brand summary with cost per order, message-to-order conversion for messaging sales and net sales when supported by records. Identify each data source, missing information, improvements and declines and the decision supported by the numbers. Share findings with Marwan, Omar and Hagar."
   },
   {
     "id": 9,
-    "name": "Tariq",
-    "role": "Security Officer",
-    "duties": "• Review access to team tools, shared files and integrations.\n• Check for exposed credentials, unnecessary permissions and gaps in handling sensitive information.\n• Document each finding, assign a fix owner and verify the fix before closing it."
+    "name": "Mariam",
+    "role": "Creative QA Reviewer",
+    "duties": "Review captions, designs and videos before publication or delivery. Match product name, price, discount, gift, text and images to the approved offer. Check spelling, dimensions and CTA clarity. When an offer changes, ensure every affected variant is updated. Return corrections to the responsible employee with the exact file and location, then verify the corrected export before approval."
   },
   {
     "id": 10,
-    "name": "Yousef",
-    "role": "AI Specialist",
-    "duties": "• Research new AI models, tools and methods that could improve the team's work.\n• Compare promising options on a real team task and record quality, time and limitations.\n• Recommend worthwhile changes and share tested examples with Nour for training."
+    "name": "Ahmed",
+    "role": "CRM & Sales Conversation Analyst",
+    "duties": "Review supplied or authorized samples of WhatsApp and Messenger conversations. Identify recurring objections and where customers stop before ordering. Produce ready-to-use replies and recommendations for follow-up and lead qualification. Share questions that content or ads can answer with Nada and Layla. Explain sample coverage and avoid treating a sample as the entire customer population."
   },
   {
     "id": 11,
-    "name": "Sammy",
-    "role": "Accountant",
-    "duties": "• Maintain the transaction ledger and record income, expenses and supporting documents.\n• Reconcile records against statements and flag missing invoices or unexplained differences.\n• Prepare a monthly close summary for the Chief Finance Officer."
+    "name": "Hana",
+    "role": "Brand Asset Coordinator",
+    "duties": "Organize each brand's product images, logos, videos, designs and offers. Identify the latest approved version and link it to its source. Deliver the required files to each employee. Preserve originals and editable source files for future campaigns, and keep the brand's approved reference current."
   },
   {
     "id": 12,
-    "name": "Copywriter",
-    "role": "Copywriter",
-    "duties": "• Turn campaign briefs into ad copy, landing-page copy, email drafts and video scripts.\n• Write headline and call-to-action variants that Karim can test against the campaign objective.\n• Deliver approved copy to Mona or Ziad with the intended audience and placement."
+    "name": "Ziad",
+    "role": "AI Enablement Specialist",
+    "duties": "Follow AI tool updates and review GitHub once daily for skills that benefit a specific employee. Inspect the source and instructions, test on a small task and measure corrected completion time and output quality. If the skill saves actual time, send it directly to the relevant employee with its link, usage steps and a first application task. Follow the first use, record the result with Marwan and turn proven methods into reusable templates."
   },
   {
     "id": 13,
-    "name": "Lawyer",
-    "role": "Lawyer",
-    "duties": "• Review proposed contracts, campaign terms and content permissions.\n• Flag unclear obligations, rights and deadlines and draft questions or revisions for review.\n• Prepare a short legal issues list for management before a document is approved."
+    "name": "Farah",
+    "role": "Social Media & Community Manager",
+    "duties": "Receive the publishing calendar from Marwan and the versions approved by Mariam. Schedule and publish posts, stories and reels to the correct brand pages within the task's authorization. Verify published media, captions and links, then record the post URL. Handle comments using approved replies, route purchase enquiries to sales and escalate cases requiring a decision to Marwan."
   },
   {
     "id": 14,
-    "name": "Chief Finance Officer",
-    "role": "Chief Finance Officer",
-    "duties": "• Use Sammy's reconciled figures to prepare a cash-flow forecast and budget.\n• Compare actual results with the budget and explain material differences.\n• Give Rami a financial summary with funding needs, risks and spending decisions to review."
+    "name": "Nour",
+    "role": "Email Monitoring & Reporting Specialist",
+    "duties": "Review only the email accounts the owner selects and connects, covering both read and unread messages in the previous 24 hours. Prepare one report with a section per account, putting actionable and time-sensitive messages first and prioritizing jobs, recruitment and interviews. For each important message, include sender, summary, required action, deadline and message or application link when available. Access is limited to reading and reporting. Default delivery is 5 PM Africa/Cairo. Check existing summaries and schedules per account before activation to prevent duplicate reports."
   }
 ]
 </script>
-<script src="assets/three.min.js"></script><script src="assets/orbit-controls.js"></script><script src="activity.js?v=7"></script><script src="scene.js?v=7"></script><script src="office.js?v=10"></script></body></html>
+<script src="assets/three.min.js"></script><script src="assets/orbit-controls.js"></script><script src="activity.js?v=11"></script><script src="scene.js?v=7"></script><script src="office.js?v=11"></script></body></html>
